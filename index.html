@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WatchLens — Analog vs Digital Watch AI Detector</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Menghubungkan ke File CSS Eksternal -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo-zone">
+      <div class="logo"><span class="logo-mark"></span> WatchLens</div>
+      <div class="dev-badge">
+        <span class="dev-name">Ahmad Farel Ferbian Pratama</span>
+        <span class="dev-nim">NIM. 2421400062</span>
+      </div>
+    </div>
+    <div class="navlinks">
+      <a href="#">Beranda</a>
+      <a href="#panduan">Cara Pakai</a>
+      <a href="#deteksi">Deteksi</a>
+      <a href="#hubungi">Hubungi Kami</a>
+    </div>
+    <div class="navright">
+      <button class="btn-primary">Mulai Deteksi →</button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Ditenagai AI Komputasi Visi</div>
+      <h1>Deteksi & bandingkan <span class="accent-a">jam analog</span> dengan <span class="accent-d">jam digital</span> secara instan.</h1>
+      <p class="lead">Arahkan kamera atau unggah foto — WatchLens mengenali jenis jam tangan, membaca waktu, dan menilai akurasinya secara real-time.</p>
+      <div class="hero-ctas">
+        <button class="btn-light" id="heroCamBtn">📷 Aktifkan Lensa Kamera</button>
+      </div>
+    </div>
+
+    <div class="duel">
+      <div class="duel-card analog">
+        <div class="duel-tag">Analog</div>
+        <div class="clock-face" id="clockFace">
+          <div class="clock-hand hand-hour" id="hourHand"></div>
+          <div class="clock-hand hand-min" id="minHand"></div>
+          <div class="clock-hand hand-sec" id="secHand"></div>
+          <div class="clock-center"></div>
+        </div>
+      </div>
+      
+      <div class="duel-card digital">
+        <div class="duel-tag">Digital</div>
+        <div class="lcd-screen">
+          <div class="lcd-time" id="lcdTime">00:00:00</div>
+          <div class="lcd-date" id="lcdDate">— — —</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="guide-section" id="panduan">
+  <div class="wrap">
+    <div class="guide-title">
+      <h2>Panduan Alur Penggunaan</h2>
+      <p>Ikuti langkah mudah berikut untuk memulai analisis objek jam tangan</p>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="step-badge">1</div>
+        <h3>Pilih Metode Input</h3>
+        <p>Klik opsi <strong>"Gunakan Kamera"</strong> untuk pemindaian langsung secara real-time, atau klik <strong>"Unggah Gambar"</strong> untuk memasukkan file foto arloji.</p>
+      </div>
+      <div class="guide-card">
+        <div class="step-badge">2</div>
+        <h3>Posisikan Objek Jam</h3>
+        <p>Bila menggunakan kamera, posisikan permukaan dial jam tangan tepat di tengah lensa bingkai kamera. Sistem akan membaca pergerakan objek secara otomatis.</p>
+      </div>
+      <div class="guide-card">
+        <div class="step-badge">3</div>
+        <h3>Kunci & Simpan Riwayat</h3>
+        <p>Lihat visual grafik persentase di dashboard, lalu klik tombol <strong>"Deteksi Sekarang"</strong> untuk mengunci hasil pindaian dan memasukkannya ke log tabel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="detect-bar-zone" id="deteksi">
+  <div class="detect-bar">
+    <div class="detect-option cam" id="camOption">
+      <div class="ic">📷</div>
+      <div class="txt"><strong>Gunakan Kamera</strong><span>Deteksi real-time instan</span></div>
+    </div>
+    <div class="detect-option file" id="fileOption">
+      <div class="ic">📁</div>
+      <div class="txt"><strong>Unggah Gambar</strong><span>Pilih file dari perangkat</span></div>
+    </div>
+    <button class="detect-cta" id="directDetectBtn">Deteksi Sekarang →</button>
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+  </div>
+  
+  <div class="workspace-layout">
+    <div class="media-viewport">
+      <div id="camPreview">
+        <div class="scanner-line" id="camScanner"></div>
+        <video id="camVideo" autoplay playsinline muted></video>
+      </div>
+      <div id="imgPreview">
+        <div class="scanner-line" id="imgScanner"></div>
+        <img id="imgView" src="" alt="Pratinjau Hasil Unggahan Jam">
+      </div>
+    </div>
+    
+    <div id="resultContainer" class="result-container">
+      <div>
+        <div class="result-header">
+          <span class="result-main-title">Analisis Neural Network</span>
+          <span class="verdict-badge" id="verdictBadge">Ready 🟢</span>
+        </div>
+        
+        <div class="metric-track-block">
+          <div class="metric-info-row">
+            <span class="metric-name">🕰️ Kategori Jam Analog</span>
+            <span class="metric-percentage" id="analogPercent" style="color: var(--analog);">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="analogFill" class="progress-fill fill-analog"></div>
+          </div>
+        </div>
+
+        <div class="metric-track-block">
+          <div class="metric-info-row">
+            <span class="metric-name">📟 Kategori Jam Digital</span>
+            <span class="metric-percentage" id="digitalPercent" style="color: var(--digital);">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="digitalFill" class="progress-fill fill-digital"></div>
+          </div>
+        </div>
+        
+        <span class="result-status-text" id="resStatusText">Sistem aktif. Menunggu deteksi objek visual...</span>
+      </div>
+      
+      <div class="spec-table" id="specTable" style="display:none;">
+        <div class="spec-row"><span class="spec-label">Sistem Mekanis</span><span class="spec-val" id="specType">-</span></div>
+        <div class="spec-row"><span class="spec-label">Metode Ekstraksi</span><span class="spec-val" id="specMethod">-</span></div>
+        <div class="spec-row"><span class="spec-label">Kecepatan Pindai</span><span class="spec-val" id="specSpeed">-</span></div>
+        <div class="spec-row"><span class="spec-label">Status Deviasi</span><span class="spec-val" id="specDeviation" style="color:#2ecc71;">0.00s (Sinkron)</span></div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="historyCard" class="history-card">
+    <div class="history-header-row">
+      <h4>Riwayat Pemeriksaan Sesi Ini</h4>
+      <button class="btn-export" id="exportCsvBtn">📥 Unduh Log (.CSV)</button>
+    </div>
+    <div class="history-table-wrapper">
+      <table class="history-table" id="mainHistoryTable">
+        <thead>
+          <tr>
+            <th>Waktu Pindai</th>
+            <th>Tipe Jam Terdeteksi</th>
+            <th>Tingkat Keyakinan AI</th>
+            <th>Status Enjin</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div id="fileName"></div>
+</div>
+
+<section class="intro" id="cara-kerja">
+  <div class="wrap intro-inner">
+    <div class="intro-visual">
+      <div class="intro-photo">
+        <div class="split">
+          <div class="half top">
+            <div class="radar-circle"></div>
+            <div class="tech-lbl">Analog Vector Engine</div>
+          </div>
+          <div class="half bottom">
+            <div class="grid-matrix"></div>
+            <div class="tech-lbl">Digital Matrix Decoder</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow-dark">Metode Komputasi</div>
+      <h2>Satu model visi komputer, dua arsitektur penunjuk waktu.</h2>
+      <p>Sistem ini mengekstrak koordinat matriks spasial pada bingkai jam tangan untuk melacak deviasi akurasi secara otomatis, baik lewat geometri sudut mekanis jarum analog maupun pemindaian baris LCD digital.</p>
+    </div>
+  </div>
+</section>
+
+<section class="feedback-section" id="hubungi">
+  <div class="wrap feedback-grid">
+    <div class="feedback-info">
+      <h2>Kirim Masukan & Evaluasi Performa</h2>
+      <p>Apakah sistem AI kami kurang tepat mengenali jam tangan milikmu? Kirim pesan umpan balik performa langsung untuk optimalisasi data training enjin visi komputer kami berikutnya.</p>
+      
+      <div class="dev-meta-card">
+        <div class="meta-item"><span class="meta-lbl">Pengembang Utama</span><span class="meta-val">Ahmad Farel Ferbian Pratama</span></div>
+        <div class="meta-item"><span class="meta-lbl">NIM Akademik</span><span class="meta-val">2421400062</span></div>
+        <div class="meta-item"><span class="meta-lbl">Status Proyek</span><span class="meta-val" style="color:#22c55e;">Production Ready</span></div>
+      </div>
+    </div>
+    
+    <div>
+      <form class="feedback-form" id="msgForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label for="usrName">Nama Pengirim</label>
+          <input type="text" id="usrName" placeholder="Masukkan nama Anda..." required>
+        </div>
+        <div class="form-group">
+          <label for="usrEmail">Alamat Email</label>
+          <input type="email" id="usrEmail" placeholder="nama@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="usrMsg">Isi Pesan / Feedback Model AI</label>
+          <textarea id="usrMsg" rows="4" placeholder="Tuliskan masukan atau bug akurasi deteksi jam di sini..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Kirim Pesan Masukan →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 WatchLens. Project Sistem Cerdas oleh Ahmad Farel Ferbian Pratama.</span>
+  </div>
+</footer>
+
+<div class="toast-notif" id="toastNotif">Pesan berhasil dikirim ke server sistem cerdas! ✓</div>
+
+<!-- DEPENDENCIES CORE AI (Library eksternal harus tetap di HTML) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+<!-- Menghubungkan ke File JavaScript Eksternal -->
+<script src="script.js"></script>
+</body>
+</html>
