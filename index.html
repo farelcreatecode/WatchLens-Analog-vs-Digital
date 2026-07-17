@@ -10,10 +10,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- Menghubungkan ke File CSS Eksternal -->
+  <!-- File CSS Eksternal -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- Efek Hiasan Aura Cahaya Latar Belakang -->
+<div class="quantum-bg-glow"></div>
 
 <header>
   <nav>
@@ -28,7 +31,7 @@
       <a href="#">Beranda</a>
       <a href="#panduan">Cara Pakai</a>
       <a href="#deteksi">Deteksi</a>
-      <a href="#hubungi">Hubungi Kami</a>
+      <a href="#hubungi">Hubungi</a>
     </div>
     <div class="navright">
       <button class="btn-primary">Mulai Deteksi →</button>
@@ -48,7 +51,7 @@
     </div>
 
     <div class="duel">
-      <div class="duel-card analog">
+      <div class="duel-card analog" id="cardAnalog">
         <div class="duel-tag">Analog</div>
         <div class="clock-face" id="clockFace">
           <div class="clock-hand hand-hour" id="hourHand"></div>
@@ -58,7 +61,7 @@
         </div>
       </div>
       
-      <div class="duel-card digital">
+      <div class="duel-card digital" id="cardDigital">
         <div class="duel-tag">Digital</div>
         <div class="lcd-screen">
           <div class="lcd-time" id="lcdTime">00:00:00</div>
@@ -79,17 +82,17 @@
       <div class="guide-card">
         <div class="step-badge">1</div>
         <h3>Pilih Metode Input</h3>
-        <p>Klik opsi <strong>"Gunakan Kamera"</strong> untuk pemindaian langsung secara real-time, atau klik <strong>"Unggah Gambar"</strong> untuk memasukkan file foto arloji.</p>
+        <p>Klik opsi <strong>"Kamera"</strong> untuk pemindaian langsung secara real-time, atau klik <strong>"Unggah Gambar"</strong> untuk memasukkan file foto arloji.</p>
       </div>
       <div class="guide-card">
         <div class="step-badge">2</div>
         <h3>Posisikan Objek Jam</h3>
-        <p>Bila menggunakan kamera, posisikan permukaan dial jam tangan tepat di tengah lensa bingkai kamera. Sistem akan membaca pergerakan objek secara otomatis.</p>
+        <p>Bila menggunakan kamera, posisikan permukaan dial jam tangan tepat di tengah lensa bingkai kamera secara stabil.</p>
       </div>
       <div class="guide-card">
         <div class="step-badge">3</div>
         <h3>Kunci & Simpan Riwayat</h3>
-        <p>Lihat visual grafik persentase di dashboard, lalu klik tombol <strong>"Deteksi Sekarang"</strong> untuk mengunci hasil pindaian dan memasukkannya ke log tabel.</p>
+        <p>Lihat grafik persentase di dashboard, lalu klik tombol <strong>"Deteksi Sekarang"</strong> untuk mengunci hasil pindaian ke log tabel.</p>
       </div>
     </div>
   </div>
@@ -113,10 +116,12 @@
     <div class="media-viewport">
       <div id="camPreview">
         <div class="scanner-line" id="camScanner"></div>
+        <div class="reticle-box"><span></span><span></span><span></span><span></span></div>
         <video id="camVideo" autoplay playsinline muted></video>
       </div>
       <div id="imgPreview">
         <div class="scanner-line" id="imgScanner"></div>
+        <div class="reticle-box"><span></span><span></span><span></span><span></span></div>
         <img id="imgView" src="" alt="Pratinjau Hasil Unggahan Jam">
       </div>
     </div>
@@ -214,7 +219,7 @@
       <p>Apakah sistem AI kami kurang tepat mengenali jam tangan milikmu? Kirim pesan umpan balik performa langsung untuk optimalisasi data training enjin visi komputer kami berikutnya.</p>
       
       <div class="dev-meta-card">
-        <div class="meta-item"><span class="meta-lbl">Pengembang Utama</span><span class="meta-val">Ahmad Farel Ferbian Pratama</span></div>
+        <div class="meta-item"><span class="meta-lbl">Pengembangkan Utama</span><span class="meta-val">Ahmad Farel Ferbian Pratama</span></div>
         <div class="meta-item"><span class="meta-lbl">NIM Akademik</span><span class="meta-val">2421400062</span></div>
         <div class="meta-item"><span class="meta-lbl">Status Proyek</span><span class="meta-val" style="color:#22c55e;">Production Ready</span></div>
       </div>
@@ -248,11 +253,8 @@
 
 <div class="toast-notif" id="toastNotif">Pesan berhasil dikirim ke server sistem cerdas! ✓</div>
 
-<!-- DEPENDENCIES CORE AI (Library eksternal harus tetap di HTML) -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-
-<!-- Menghubungkan ke File JavaScript Eksternal -->
 <script src="script.js"></script>
 </body>
 </html>

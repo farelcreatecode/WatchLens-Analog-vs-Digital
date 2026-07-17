@@ -1,7 +1,4 @@
-// ========================================================
-// KUNCI: LINK TEACHABLE MACHINE MILIK FAREL TERTANAM AMAN
-// ========================================================
-const URL_MODEL = "https://teachablemachine.withgoogle.com/models/gEfNaH_kW/"; 
+const URL_MODEL = "https://teachablemachine.withgoogle.com/models/gEFNaH_kW/"; 
 
 let model, maxPredictions, isPredicting = false;
 let finalVerdictLabel = "MEMINDAI...", finalHighestPercent = 0, finalIsAnalog = false;
@@ -24,16 +21,9 @@ const exportCsvBtn = document.getElementById('exportCsvBtn');
 const camScanner = document.getElementById('camScanner');
 const imgScanner = document.getElementById('imgScanner');
 
-// MEMUAT ARSITEKTUR ENJIN AI
+// MEMUAT MODEL AI
 async function loadAIModel() {
   resContainer.style.display = "flex";
-  if (URL_MODEL.includes("PASTE_LINK_KAMU_DISINI")) {
-    verdictBadge.textContent = "ALARM";
-    verdictBadge.style.background = "#ef4444";
-    verdictBadge.style.color = "#fff";
-    resStatusText.textContent = "Link model Teachable Machine belum diisi pada kode script.";
-    return;
-  }
   try {
     resStatusText.textContent = "Mengunduh arsitektur neural network visi komputer...";
     const modelURL = URL_MODEL + "model.json";
@@ -47,7 +37,7 @@ async function loadAIModel() {
 }
 loadAIModel();
 
-// LOOP PREDIKSI KAMERA SECARA REAL-TIME
+// LOOP DETEKSI KAMERA REAL-TIME
 async function predictLoop() {
   if (!isPredicting || !model) return;
   const prediction = await model.predict(camVideo);
@@ -55,7 +45,7 @@ async function predictLoop() {
   window.requestAnimationFrame(predictLoop);
 }
 
-// EKSTRAKSI HASIL DETEKSI NEURAL NETWORK
+// MEMPROSES PERSENTASE NEURAL NETWORK
 function displayDetectionResult(prediction) {
   let analogProb = 0;
   let digitalProb = 0;
@@ -93,8 +83,11 @@ function displayDetectionResult(prediction) {
     finalIsAnalog = finalVerdictLabel.includes('ANALOG') || finalVerdictLabel.includes('JARUM') || finalVerdictLabel.includes('CLASS 0');
 
     verdictBadge.textContent = highestPred.className;
-    verdictBadge.style.background = finalIsAnalog ? "rgba(197, 155, 39, 0.12)" : "rgba(14, 165, 233, 0.12)";
-    verdictBadge.style.color = finalIsAnalog ? "var(--analog)" : "#0284c7";
+    
+    // Efek Warna Badge Dinamis
+    verdictBadge.style.borderColor = finalIsAnalog ? "var(--analog)" : "var(--digital)";
+    verdictBadge.style.color = finalIsAnalog ? "var(--analog)" : "var(--digital)";
+    verdictBadge.style.background = finalIsAnalog ? "rgba(245, 158, 11, 0.1)" : "rgba(56, 189, 248, 0.1)";
 
     resStatusText.textContent = `AI mendeteksi objek sebagai ${highestPred.className}.`;
 
@@ -104,16 +97,16 @@ function displayDetectionResult(prediction) {
     document.getElementById('specSpeed').textContent = "0.03 Detik";
   } else {
     verdictBadge.textContent = "MEMINDAI...";
-    verdictBadge.style.background = "var(--paper)";
+    verdictBadge.style.background = "rgba(255,255,255,0.05)";
     verdictBadge.style.color = "var(--slate)";
     specTable.style.display = "none";
   }
 }
 
-// MENGUNCI HASIL PADA DATA LOGGER TABEL
+// LOG DATA LOGGER TABEL
 directDetectBtn.addEventListener('click', () => {
   if (finalHighestPercent < 50 || finalVerdictLabel === "MEMINDAI...") {
-    alert("Sistem belum mendeteksi objek jam secara stabil. Silakan arahkan kamera atau pilih berkas gambar.");
+    alert("Sistem belum mendeteksi objek jam secara stabil.");
     return;
   }
   
@@ -131,8 +124,8 @@ directDetectBtn.addEventListener('click', () => {
   const newRow = document.createElement('tr');
   newRow.innerHTML = `
     <td style="font-family:'JetBrains Mono'; font-weight:600; color:var(--slate);">${timeString}</td>
-    <td><span style="background:${finalIsAnalog ? 'rgba(197, 155, 39, 0.12)':'rgba(14, 165, 233, 0.12)'}; color:${finalIsAnalog ? 'var(--analog)':'#0284c7'}; padding:4px 12px; border-radius:8px; font-weight:700; font-family:'Space Grotesk'; font-size:12px; letter-spacing:0.02em;">${finalVerdictLabel}</span></td>
-    <td style="font-family:'JetBrains Mono'; font-weight:700; color:${finalIsAnalog ? 'var(--analog)':'#0284c7'}; font-size:16px;">${finalHighestPercent}%</td>
+    <td><span style="background:${finalIsAnalog ? 'rgba(245, 158, 11, 0.1)':'rgba(56, 189, 248, 0.1)'}; color:${finalIsAnalog ? 'var(--analog)':'var(--digital)'}; padding:4px 12px; border-radius:8px; border:1px solid; font-weight:700; font-family:'Space Grotesk'; font-size:12px;">${finalVerdictLabel}</span></td>
+    <td style="font-family:'JetBrains Mono'; font-weight:700; color:${finalIsAnalog ? 'var(--analog)':'var(--digital)'}; font-size:16px;">${finalHighestPercent}%</td>
     <td><span class="status-pill"><span class="indicator-dot"></span>SUCCESS</span></td>
   `;
   
@@ -140,45 +133,34 @@ directDetectBtn.addEventListener('click', () => {
   historyCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });
 
-// UNDUH LOG FILE (.CSV) KE KOMPUTER
+// EKSPOR CSV
 exportCsvBtn.addEventListener('click', () => {
   if(historyLogsArray.length === 0) return;
-  
   let csvContent = "data:text/csv;charset=utf-8,Waktu Pindai,Tipe Jam Terdeteksi,Tingkat Keyakinan AI,Status Enjin\n";
   historyLogsArray.forEach(log => {
     csvContent += `${log.waktu},${log.tipe},${log.akurasi},${log.status}\n`;
   });
-  
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "WatchLens_AI_Detection_Logs.csv");
+  link.setAttribute("download", "WatchLens_AI_Logs.csv");
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 });
 
-// SIMULASI MESSENGER TOAST
+// FORM TOAST MESSENGER
 function handleFormSubmit(event) {
   event.preventDefault();
   const name = document.getElementById('usrName').value;
   const toast = document.getElementById('toastNotif');
-  
-  toast.textContent = `Terima kasih ${name}, pesan masukan Anda berhasil dikirim! ✓`;
+  toast.textContent = `Terima kasih ${name}, feedback Anda berhasil dikirim! ✓`;
   toast.style.display = "block";
-  
   document.getElementById('msgForm').reset();
-  
-  setTimeout(() => {
-    toast.style.animation = "fadeIn 0.3s ease reverse";
-    setTimeout(() => {
-      toast.style.display = "none";
-      toast.style.animation = "fadeIn 0.3s ease";
-    }, 300);
-  }, 4000);
+  setTimeout(() => { toast.style.display = "none"; }, 4000);
 }
 
-// LOGIKA JAM DUEL DI BANNER UTAMA
+// CORE HERO WIDGET JAM REAL-TIME
 function initClock() {
   const now = new Date();
   const h = now.getHours() % 12, m = now.getMinutes(), s = now.getSeconds();
@@ -202,7 +184,7 @@ for (let i = 0; i < 12; i++) {
   clockFace.appendChild(tick);
 }
 
-// KONTROL AKTIVASI LENSA KAMERA
+// MANAGEMENT KAMERA
 const camOption = document.getElementById('camOption');
 const heroCamBtn = document.getElementById('heroCamBtn');
 const camPreview = document.getElementById('camPreview');
@@ -216,25 +198,18 @@ async function toggleCamera() {
     camPreview.style.display = 'none';
     camScanner.style.display = 'none';
     isPredicting = false;
-    if (camStream) {
-      camStream.getTracks().forEach(track => track.stop());
-      camStream = null;
-    }
-    resStatusText.textContent = "Kamera dinonaktifkan. Siap menerima data baru.";
+    if (camStream) { camStream.getTracks().forEach(track => track.stop()); camStream = null; }
+    resStatusText.textContent = "Kamera dinonaktifkan.";
     specTable.style.display = "none";
   } else {
     try {
       imgPreview.style.display = 'none';
-      imgScanner.style.display = 'none';
       camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
       camVideo.srcObject = camStream;
       camPreview.style.display = 'block';
       camScanner.style.display = 'block';
-      resContainer.style.display = 'flex';
       isPredicting = true;
-      camVideo.addEventListener('loadeddata', () => {
-        predictLoop();
-      });
+      camVideo.addEventListener('loadeddata', () => { predictLoop(); });
     } catch (err) {
       alert('Gagal membuka kamera: ' + err.message);
     }
@@ -247,7 +222,7 @@ if(heroCamBtn) heroCamBtn.addEventListener('click', () => {
   if (camPreview.style.display !== 'block') toggleCamera();
 });
 
-// KONTROL UNGGAH FILE GAMBAR LOKAL
+// MANAGEMENT UNGGAH FILE FOTO
 const fileOption = document.getElementById('fileOption');
 const fileInput = document.getElementById('fileInput');
 const fileNameDisplay = document.getElementById('fileName');
@@ -256,24 +231,17 @@ fileOption.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => {
   if (fileInput.files.length) {
     fileNameDisplay.textContent = '✓ Gambar dimuat: ' + fileInput.files[0].name;
-    
     if (camPreview.style.display === 'block') {
       isPredicting = false;
-      if (camStream) {
-        camStream.getTracks().forEach(track => track.stop());
-        camStream = null;
-      }
+      if (camStream) { camStream.getTracks().forEach(track => track.stop()); camStream = null; }
       camPreview.style.display = 'none';
       camScanner.style.display = 'none';
     }
-    
     if (model) {
       const blobURL = URL.createObjectURL(fileInput.files[0]);
       imgView.src = blobURL;
       imgPreview.style.display = 'block';
       imgScanner.style.display = 'block';
-      resContainer.style.display = 'flex';
-      
       imgView.onload = async () => {
         resStatusText.textContent = "Mengekstrak data piksel gambar...";
         const prediction = await model.predict(imgView);
